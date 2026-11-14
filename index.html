@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pesan Terakhir</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<style>
+:root{color-scheme:dark}
+html,body{height:100%;margin:0;background:#000;font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;-webkit-tap-highlight-color:transparent;user-select:none}
+#phone{box-sizing:border-box}
+.dot{width:7px;height:7px;border-radius:9999px;background:#8696a0;animation:b 1s infinite}
+.dot:nth-child(2){animation-delay:.15s}.dot:nth-child(3){animation-delay:.3s}
+@keyframes b{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-4px);opacity:1}}
+@keyframes up{to{transform:translateY(-100%)}}
+@keyframes shk{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+@keyframes pop{from{transform:translateY(-120%);opacity:0}to{transform:none;opacity:1}}
+@keyframes pulse{50%{transform:scale(1.25)}}
+.shake{animation:shk .5s}
+.unlock{animation:up .55s ease-in forwards}
+.key{width:74px;height:74px;border-radius:9999px;background:rgba(255,255,255,.18);backdrop-filter:blur(10px);font-size:32px;font-weight:300;color:#fff}
+.key:active{background:rgba(255,255,255,.45)}
+.msg{max-width:82%;padding:6px 9px 4px;border-radius:9px;font-size:15px;line-height:1.35;color:#e9edef;word-wrap:break-word}
+.me{background:#005c4b;margin-left:auto;border-top-right-radius:2px}
+.her{background:#202c33;border-top-left-radius:2px}
+.tm{font-size:10.5px;color:#8696a0;text-align:right;margin-top:1px}
+.badge{position:absolute;top:2px;right:calc(50% - 20px);background:#f33;color:#fff;font-size:10px;min-width:16px;height:16px;border-radius:9999px;display:flex;align-items:center;justify-content:center;animation:pulse 1.2s infinite}
+@media (prefers-reduced-motion:reduce){.badge,.dot{animation:none}}
+input[type=range]{accent-color:#00a884;width:100%}
+</style>
+</head>
+<body>
+<div id="phone" class="relative mx-auto h-full max-w-[430px] overflow-hidden bg-black" style="padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)">
+
+<!-- status bar -->
+<div id="sb" class="absolute left-0 right-0 top-0 z-50 flex items-center justify-between px-7 pt-[calc(env(safe-area-inset-top,0px)+6px)] pb-1 text-[14px] font-semibold text-white pointer-events-none">
+  <span id="clk">21:15</span>
+  <span class="flex items-center gap-1.5 text-[12px]"><span>5G</span>
+    <svg width="18" height="11" viewBox="0 0 18 11" fill="#fff"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="6" rx="1"/><rect x="10" y="2.5" width="3" height="8.5" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+    <span class="flex items-center gap-0.5"><span class="relative inline-block h-[11px] w-[22px] rounded-[3px] border border-white/60 p-[1px]"><span id="bat" class="block h-full rounded-[1.5px] bg-white" style="width:45%"></span></span><span id="bp">45</span></span>
+  </span>
+</div>
+
+<!-- LOCK SCREEN -->
+<div id="lock" class="absolute inset-0 z-40 flex flex-col items-center text-white" style="background:radial-gradient(120% 80% at 50% 0%,#3b3a5c 0%,#14172b 55%,#05060d 100%)">
+  <div class="mt-16 text-[13px] opacity-80">Sabtu, 14 November</div>
+  <div class="text-[78px] font-light leading-none tracking-tight">21:15</div>
+  <div id="notif" class="mt-5 hidden w-[92%] rounded-2xl bg-white/15 p-3 text-[13px] backdrop-blur-md" style="animation:pop .5s ease-out">
+    <div class="flex items-center gap-2"><span class="flex h-5 w-5 items-center justify-center rounded-md bg-[#25d366] text-[11px]">✆</span><b>WhatsApp</b><span class="ml-auto opacity-60">sekarang</span></div>
+    <div class="mt-1 font-semibold">Siti ✨</div>
+    <div class="opacity-90">P! Gue udah nyampe villanya nih. Gila, gede banget tapi sepi parah.</div>
+  </div>
+  <div class="mt-auto mb-5 flex flex-col items-center">
+    <div id="lt" class="mb-4 text-[16px]">Masukkan Kode Sandi</div>
+    <div id="dots" class="mb-6 flex gap-4"></div>
+    <div id="pad" class="grid grid-cols-3 gap-x-5 gap-y-4"></div>
+    <div class="mt-4 flex w-full justify-between px-2 text-[14px] opacity-80"><span>Darurat</span><button id="del">Hapus</button></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="flex h-full flex-col pt-[calc(env(safe-area-inset-top,0px)+30px)]">
+
+  <!-- WhatsApp -->
+  <section id="wa" class="flex min-h-0 flex-1 flex-col bg-[#0b141a]">
+    <header class="flex items-center gap-3 bg-[#202c33] px-3 py-2 text-white">
+      <span class="text-xl text-[#8696a0]">‹</span>
+      <div class="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-pink-400 to-purple-600 font-bold">S</div>
+      <div class="leading-tight"><div class="font-semibold">Siti ✨</div><div id="st" class="text-[12px] text-[#8696a0]">online</div></div>
+      <span class="ml-auto flex gap-5 text-[#8696a0]">📹 📞</span>
+    </header>
+    <div id="chat" class="flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto px-3 py-3" style="background:#0b141a"></div>
+    <div class="bg-[#202c33] px-3 py-2">
+      <div id="hint" class="mb-1 hidden text-center text-[12px] text-[#f5a623]">Ada notifikasi di Instagram. Buka dulu.</div>
+      <button id="go" class="w-full rounded-full bg-[#00a884] py-2.5 font-semibold text-[#0b141a] active:opacity-80">Lanjut baca chat</button>
+    </div>
+  </section>
+
+  <!-- Instagram -->
+  <section id="ig" class="hidden min-h-0 flex-1 flex-col bg-black text-white">
+    <header class="flex items-center justify-between border-b border-white/10 px-4 py-2">
+      <span class="text-[26px] italic" style="font-family:'Snell Roundhand','Brush Script MT',cursive">Instagram</span><span>♡ ✉</span>
+    </header>
+    <div class="min-h-0 flex-1 overflow-y-auto">
+      <div class="flex items-center gap-2 px-3 py-2">
+        <div class="h-8 w-8 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-fuchsia-600 p-[2px]"><div class="flex h-full w-full items-center justify-center rounded-full bg-black text-[10px]">IP</div></div>
+        <div class="text-[13px] font-semibold">infopuncak_update <span class="text-sky-400">✔</span></div><span class="ml-auto">⋯</span>
+      </div>
+      <svg viewBox="0 0 400 300" class="w-full bg-black" role="img" aria-label="Gerbang villa tua dengan garis polisi">
+        <defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b2533"/><stop offset="1" stop-color="#52586a"/></linearGradient>
+        <pattern id="pl" width="28" height="28" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="14" height="28" fill="#e8c42a"/><rect x="14" width="14" height="28" fill="#222"/></pattern></defs>
+        <rect width="400" height="300" fill="url(#sk)"/>
+        <path d="M0 170 L40 110 L70 150 L110 90 L150 150 L400 130 V300 H0Z" fill="#0f1418"/>
+        <rect y="240" width="400" height="60" fill="#1a1d1a"/>
+        <g stroke="#0a0a0a" stroke-width="6"><path d="M60 90V250M100 90V250M140 90V250M260 90V250M300 90V250M340 90V250M50 130H350"/></g>
+        <rect x="150" y="150" width="100" height="100" fill="#121214"/>
+        <rect x="38" y="70" width="28" height="180" fill="#2c2c2e"/><rect x="334" y="70" width="28" height="180" fill="#2c2c2e"/>
+        <path d="M44 70 q8-26 16 0 l-4 10 h-8z" fill="#3a3a3c"/><path d="M340 70 q8-30 16-6 l-6 4 -3 8z" fill="#3a3a3c"/>
+        <polygon points="0,205 400,175 400,193 0,223" fill="url(#pl)"/>
+        <text x="200" y="285" fill="#777" font-size="11" text-anchor="middle">Villa Cempaka</text>
+      </svg>
+      <div class="flex gap-4 px-3 pt-2 text-[22px]"><button id="like" aria-label="Suka">♡</button><span>💬</span><span>➤</span></div>
+      <div id="lc" class="px-3 pt-1 text-[13px] font-semibold">12.481 suka</div>
+      <div class="px-3 pt-1 text-[13px] leading-snug"><b>infopuncak_update</b> <b>[VIRAL] Ditutup Sejak 2019, Villa Tua di Kawasan Cisarua Ini Kembali Makan Korban!</b> Warga sekitar mengimbau wisatawan agar tidak tertipu iklan penyewaan “Villa Cempaka” di media sosial. Villa tersebut sudah lama terbengkalai tanpa penjaga setelah kasus pembunuhan satu keluarga 7 tahun lalu. Warga sering melihat penampakan sosok pria tua yang berpura-pura menjadi penjaga villa untuk menjebak tamu yang datang sendirian…</div>
+      <div class="px-3 pt-3 text-[12px] text-white/50">Lihat 2.304 komentar</div>
+      <div class="space-y-2 px-3 py-2 text-[13px]">
+        <div><b>dimas_pratama</b> Lah itu kan villa yang gerbangnya ada patung singa pecah? Serem banget lewat depannya aja merinding.</div>
+        <div><b>nadia.sari</b> Beneran min, temenku tahun lalu hampir nginep situ untung sadar pas liat gak ada meteran listriknya.</div>
+        <div><b>rendi_arf</b> Bapak penjaganya katanya pake baju batik coklat, jalannya pincang 😨</div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="grid grid-cols-2 border-t border-white/10 bg-[#111]">
+    <button id="tw" class="relative py-2.5 text-center text-[12px] text-white"><div class="text-xl">💬</div>WhatsApp</button>
+    <button id="ti" class="relative py-2.5 text-center text-[12px] text-white/50"><div class="text-xl">📷</div>Instagram<span id="ib" class="badge hidden">1</span></button>
+  </nav>
+</div>
+
+<!-- Epilog -->
+<div id="epi" class="absolute inset-0 z-[60] hidden items-end bg-black/70 p-3">
+  <div class="w-full rounded-2xl bg-white p-4 text-black">
+    <div class="flex items-center gap-2 text-[13px] font-semibold"><span class="rounded bg-red-600 px-1.5 py-0.5 text-[11px] text-white">BREAKING</span>@infopuncak_update · 08:00 WIB</div>
+    <p class="mt-3 text-[15px] font-semibold leading-snug">Seorang Mahasiswi Berinisial S (21) Ditemukan Meninggal Dunia di Dalam Villa Terbengkalai Cisarua.</p>
+    <p class="mt-2 text-[13px] leading-snug text-black/70">Polisi menduga korban mengalami henti jantung akibat syok berat. Tidak ditemukan tanda kekerasan.</p>
+    <p class="mt-3 text-[11px] text-black/50">Cerita fiksi. Tokoh dan tempat hanya rekaan.</p>
+    <button id="re" class="mt-3 w-full rounded-full bg-black py-2.5 text-[14px] font-semibold text-white">Mulai lagi</button>
+  </div>
+</div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const T=[
+{w:'s',t:'P! Gue udah nyampe villanya nih. Gila, gede banget tapi sepi parah.',h:'21:15',b:45},
+{w:'s',t:'Tadi bapak penjaganya buru-buru banget cabut pas ngasih kunci. Katanya “jangan keluar kamar lewat jam 12 malam”. Klasik banget kan nakut-nakutinnya 😂',h:'21:16'},
+{w:'m',t:'Anjir serem amat. Lu beneran sendirian di situ?',h:'21:18'},
+{w:'s',t:'Iya, Rian nyusul besok pagi katanya. Yaudah lah lumayan murah dapet villa segede ini.',h:'21:19'},
+{w:'s',t:'Eh, lu masih bangun gak?',h:'23:40',b:28,wait:2500},
+{w:'s',t:'Dari tadi di lantai atas kayak ada suara orang nyeret kursi. Padahal gue sendirian di bawah.',h:'23:41'},
+{w:'s',img:'room',h:'23:42'},
+{w:'s',t:'Coba liat deh di ujung tangga, itu bayangan apaan dah? Perasaan gue doang apa gimana?',h:'23:43'},
+{w:'m',t:'Sit, mending lu kunci pintu kamar sekarang. Jangan keluar.',h:'23:45'},
+{w:'s',vn:1,h:'23:47',b:17},
+{gate:1},
+{w:'m',t:'SIT!! KELUAR DARI SANA SEKARANG!!',h:'00:22',b:12},
+{w:'m',fwd:1,h:'00:22'},
+{w:'m',t:'Villa Cempaka udah ditutup dari 2019! Bapak-bapak yang ngasih kunci ke lu tadi bukan penjaga villa!!',h:'00:23'},
+{w:'s',t:'udah telat.',h:'00:35',wait:5000,b:6,shake:1},
+{w:'m',t:'Maksud lu apa?! Lu di mana sekarang?! Angkat telepon gue!!',h:'00:35'},
+{w:'s',t:'pintu kamarnya udah kebuka.',h:'00:37',wait:3500},
+{w:'s',t:'bapak penjaganya lagi berdiri di depan kasur gue sambil senyum.',h:'00:38',wait:2500,shake:1},
+{w:'s',img:'last',h:'02:47',wait:6000,b:3,shake:1},
+{w:'s',t:'dia bilang makasih udah nemenin malem ini.',h:'02:47'},
+{sys:'Pesan tidak dapat dikirim. Nomor ini sudah tidak aktif.',h:'02:47'},
+{end:1}];
+let i=0,busy=false,ig=false,pin='',AC=null;
+
+/* audio */
+function ac(){if(!AC)try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}if(AC&&AC.state==='suspended')AC.resume();return AC}
+function tone(f,d,v,t0){const c=ac();if(!c)return;const o=c.createOscillator(),g=c.createGain();o.frequency.value=f;g.gain.setValueAtTime(v,c.currentTime+t0);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+t0+d);o.connect(g).connect(c.destination);o.start(c.currentTime+t0);o.stop(c.currentTime+t0+d)}
+function ding(){tone(880,.18,.12,0);tone(1175,.3,.12,.12)}
+function noise(t0,d,f,type,v){const c=ac();if(!c)return;const b=c.createBuffer(1,c.sampleRate*d,c.sampleRate),a=b.getChannelData(0);for(let k=0;k<a.length;k++)a[k]=Math.random()*2-1;const s=c.createBufferSource();s.buffer=b;const fl=c.createBiquadFilter();fl.type=type;fl.frequency.value=f;const g=c.createGain();g.gain.setValueAtTime(0,c.currentTime+t0);g.gain.linearRampToValueAtTime(v,c.currentTime+t0+d/2);g.gain.linearRampToValueAtTime(0,c.currentTime+t0+d);s.connect(fl).connect(g).connect(c.destination);s.start(c.currentTime+t0)}
+function knock(t0){const c=ac();if(!c)return;const o=c.createOscillator(),g=c.createGain();o.frequency.setValueAtTime(140,c.currentTime+t0);o.frequency.exponentialRampToValueAtTime(45,c.currentTime+t0+.12);g.gain.setValueAtTime(.9,c.currentTime+t0);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+t0+.18);o.connect(g).connect(c.destination);o.start(c.currentTime+t0);o.stop(c.currentTime+t0+.2)}
+function say(t,p,r,v){try{const u=new SpeechSynthesisUtterance(t);u.lang='id-ID';u.pitch=p;u.rate=r;u.volume=v;speechSynthesis.speak(u)}catch(e){}}
+function playVN(btn){ac();noise(.2,2.2,900,'bandpass',.18);say('Gue denger ada yang ngetuk jendela',1.4,.7,.5);knock(3.2);knock(3.9);knock(4.6);noise(5.5,2.2,300,'lowpass',.35);setTimeout(()=>say('Keluar',0,.4,1),5600);
+ const bars=btn.parentNode.querySelectorAll('i');btn.textContent='❚❚';let n=0;const iv=setInterval(()=>{bars.forEach((b,k)=>b.style.background=k<=n?'#53bdeb':'#8696a0');n++;if(n>=bars.length){clearInterval(iv);btn.textContent='▶'}},8000/bars.length)}
+
+/* status */
+function setClock(h,b){$('clk').textContent=h;if(b!=null){$('bat').style.width=b+'%';$('bp').textContent=b;$('bat').style.background=b<=10?'#ff3b30':'#fff'}}
+
+/* lock screen */
+const pad=$('pad');'123456789 0'.split('').forEach(k=>{if(k===' '){pad.appendChild(document.createElement('div'));return}const b=document.createElement('button');b.className='key';b.textContent=k;b.onclick=()=>press(k);pad.appendChild(b)});
+function drawDots(){$('dots').innerHTML=[0,1,2,3].map(k=>`<span style="width:13px;height:13px;border-radius:9999px;border:1.5px solid #fff;background:${k<pin.length?'#fff':'transparent'}"></span>`).join('')}
+function press(k){ac();if(pin.length>=4)return;pin+=k;drawDots();if(pin.length===4)setTimeout(()=>{$('lock').classList.add('unlock');setTimeout(()=>{$('lock').style.display='none';start()},560)},180)}
+$('del').onclick=()=>{pin=pin.slice(0,-1);drawDots()};drawDots();
+setTimeout(()=>$('notif').classList.remove('hidden'),1500);
+
+/* chat */
+const room=`<svg viewBox="0 0 400 300" class="block w-full"><rect width="400" height="300" fill="#0d0d0e"/><polygon points="0,300 400,300 400,225 0,250" fill="#131211"/><polygon points="230,60 400,10 400,230 230,200" fill="#161514"/><g fill="#1c1a18"><polygon points="250,200 400,225 400,240 250,215"/><polygon points="250,170 400,190 400,205 250,185"/><polygon points="250,140 400,155 400,170 250,155"/><polygon points="250,110 400,120 400,135 250,125"/></g><rect x="205" y="30" width="26" height="200" fill="#1a1816"/><ellipse cx="220" cy="92" rx="21" ry="29" fill="#3b3732"/><ellipse cx="212" cy="86" rx="4" ry="6" fill="#000"/><ellipse cx="228" cy="86" rx="4" ry="6" fill="#000"/><ellipse cx="220" cy="106" rx="6" ry="9" fill="#050505"/><rect x="40" y="130" width="90" height="70" fill="#111" /><rect x="52" y="142" width="66" height="46" fill="#181614"/></svg>`;
+const last=`<svg viewBox="0 0 400 300" class="block w-full"><defs><radialGradient id="rg" cx=".5" cy=".95" r=".7"><stop offset="0" stop-color="#7a0a0a"/><stop offset=".6" stop-color="#1c0303"/><stop offset="1" stop-color="#030000"/></radialGradient><filter id="bl"><feGaussianBlur stdDeviation="2.2"/></filter></defs><rect width="400" height="300" fill="url(#rg)"/><g filter="url(#bl)"><g stroke="#2a0a0a" stroke-width="2"><path d="M0 200H400M0 245H400M120 200L60 300M280 200L340 300"/></g><path d="M90 235q40-14 90-6l8-10 8 4-6 14 14 4-4 10-30-2-80 4z" fill="#8a6a5c"/><rect x="258" y="70" width="26" height="140" rx="10" fill="#0c0606"/><rect x="298" y="72" width="26" height="140" rx="10" fill="#0c0606"/></g></svg>`;
+function add(html,cls){const d=document.createElement('div');d.className=cls;d.innerHTML=html;$('chat').appendChild(d);$('chat').scrollTop=1e9;return d}
+function render(m){
+ const side=m.w==='m'?'me':'her';let body='';
+ if(m.t)body=m.t;
+ if(m.fwd)body=`<div class="mb-1 rounded bg-black/25 p-2 text-[12px]"><div class="text-[#8696a0]">➦ Diteruskan</div><b>infopuncak_update</b><div class="opacity-90">[VIRAL] Ditutup Sejak 2019, Villa Tua di Kawasan Cisarua Ini Kembali Makan Korban!</div></div>`;
+ if(m.img==='room')body=`<div class="w-60 overflow-hidden rounded"><div id="ph" style="filter:brightness(1)">${room}</div></div><div class="mt-2 w-60 text-[12px] text-[#8696a0]">Perjelas foto<input id="br" type="range" min="1" max="5" step=".1" value="1" aria-label="Kecerahan foto"></div>`;
+ if(m.img==='last')body=`<div class="w-60 overflow-hidden rounded">${last}</div>`;
+ if(m.vn)body=`<div class="flex w-56 items-center gap-2"><button class="flex h-9 w-9 items-center justify-center rounded-full bg-[#00a884] text-white" aria-label="Putar voice note">▶</button><div class="flex flex-1 items-center gap-[2px]">${Array.from({length:26},(_,k)=>`<i style="display:block;width:3px;height:${6+Math.abs(Math.sin(k*1.7))*16}px;background:#8696a0;border-radius:2px"></i>`).join('')}</div><span class="text-[11px] text-[#8696a0]">0:08</span></div>`;
+ const d=add(`${body}<div class="tm">${m.h} ${m.w==='m'?'<span class="text-[#53bdeb]">✓✓</span>':''}</div>`,'msg '+side);
+ if(m.img==='room'){const r=d.querySelector('#br');r.oninput=()=>$('ph').style.filter=`brightness(${r.value}) contrast(${1+(r.value-1)*.25})`}
+ if(m.vn)d.querySelector('button').onclick=e=>playVN(e.currentTarget);
+ setClock(m.h,m.b);
+ if(m.shake){$('phone').classList.add('shake');setTimeout(()=>$('phone').classList.remove('shake'),520);try{navigator.vibrate&&navigator.vibrate([200,80,200])}catch(e){}}
+}
+function next(){
+ if(busy)return;const m=T[i];if(!m)return;
+ if(m.gate){if(!ig){$('hint').classList.remove('hidden');$('ib').classList.remove('hidden');return}i++;return next()}
+ busy=true;$('go').style.opacity=.5;
+ if(m.end){$('st').textContent='terakhir dilihat 02:47';setTimeout(()=>{$('epi').classList.remove('hidden');$('epi').classList.add('flex')},3500);return}
+ if(m.sys){const d=add(m.sys,'mx-auto my-2 rounded-lg bg-[#182229] px-3 py-1.5 text-center text-[12px] text-[#f5a623]');i++;busy=false;$('go').style.opacity=1;return}
+ const fin=()=>{render(m);i++;busy=false;$('go').style.opacity=1;if(m.w==='s'){ding();$('st').textContent='online'}
+  if(T[i]&&T[i].gate&&!ig){$('ib').classList.remove('hidden')}};
+ if(m.w==='s'){$('st').textContent='mengetik...';const t=add('<div class="flex gap-1 py-1.5"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>','msg her w-16');
+  setTimeout(()=>{t.remove();fin()},m.wait||1500)}else setTimeout(fin,350)
+}
+$('go').onclick=()=>{ac();next()};
+
+/* tabs */
+function tab(n){const w=n==='wa';$('wa').style.display=w?'flex':'none';$('ig').style.display=w?'none':'flex';$('tw').className=$('tw').className.replace(w?'text-white/50':'text-white ','');$('tw').classList.toggle('text-white',w);$('tw').classList.toggle('text-white/50',!w);$('ti').classList.toggle('text-white',!w);$('ti').classList.toggle('text-white/50',w)}
+$('tw').onclick=()=>tab('wa');
+$('ti').onclick=()=>{tab('ig');$('ib').classList.add('hidden');if(T[i]&&T[i].gate&&!ig){ig=true;setClock('00:15',14);$('hint').classList.add('hidden')}};
+$('like').onclick=e=>{const on=e.target.dataset.on!=='1';e.target.dataset.on=on?'1':'0';e.target.textContent=on?'♥':'♡';e.target.style.color=on?'#ff3040':'';$('lc').textContent=on?'12.482 suka':'12.481 suka'};
+$('ig').style.display='none';
+
+function start(){setClock('21:15',45);$('st').textContent='online';next()}
+$('re').onclick=()=>location.reload();
+</script>
+</body>
+</html>
